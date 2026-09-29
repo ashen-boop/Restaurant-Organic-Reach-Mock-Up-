@@ -1,0 +1,735 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>See Your Post Live · Organic Preview · The Artistic Unity</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      background: #f8f9fa;
+      font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+      color: #1e1e2f;
+      line-height: 1.6;
+      padding-bottom: 4rem;
+    }
+
+    .container {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 0 1.5rem;
+    }
+
+    .hero {
+      background: #ffffff;
+      padding: 3.5rem 2rem 2.5rem 2rem;
+      text-align: center;
+      border-bottom: 1px solid #e9ecef;
+    }
+
+    .hero h1 {
+      font-family: 'Georgia', serif;
+      font-size: 2.4rem;
+      font-weight: 400;
+      color: #0b1424;
+      line-height: 1.2;
+      margin-bottom: 0.8rem;
+    }
+
+    .hero p {
+      font-size: 1.1rem;
+      color: #3d4a5a;
+      max-width: 600px;
+      margin: 0 auto;
+    }
+
+    .selector-wrap {
+      margin: 2.5rem auto 2rem auto;
+      max-width: 520px;
+      text-align: center;
+    }
+
+    .selector-wrap label {
+      display: block;
+      font-size: 0.8rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: #7a86a0;
+      margin-bottom: 0.6rem;
+    }
+
+    select {
+      width: 100%;
+      padding: 0.95rem 1.2rem;
+      font-size: 1rem;
+      font-family: inherit;
+      font-weight: 500;
+      color: #0b1b3a;
+      background: #ffffff;
+      border: 1.5px solid #d8e3f5;
+      border-radius: 60px;
+      cursor: pointer;
+      appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%231a3b7a' stroke-width='3' stroke-linecap='round'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 1.3rem center;
+      box-shadow: 0 4px 14px -6px rgba(26, 59, 122, 0.2);
+      transition: border-color 0.2s;
+    }
+
+    select:hover { border-color: #1a3b7a; }
+    select:focus { outline: none; border-color: #1a3b7a; }
+
+    .ig-frame {
+      background: #ffffff;
+      border: 1px solid #e4ebf5;
+      border-radius: 1rem;
+      max-width: 480px;
+      margin: 0 auto;
+      box-shadow: 0 8px 30px -12px rgba(0, 0, 0, 0.1);
+      overflow: hidden;
+    }
+
+    .ig-header {
+      display: flex;
+      align-items: center;
+      gap: 0.7rem;
+      padding: 0.8rem 1rem;
+    }
+
+    .ig-avatar {
+      width: 2.2rem;
+      height: 2.2rem;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #3b6bcf, #1a3b7a);
+      flex: 0 0 auto;
+      position: relative;
+    }
+
+    .ig-avatar::after {
+      content: "";
+      position: absolute;
+      inset: -2px;
+      border-radius: 50%;
+      border: 2px solid #e1306c;
+      z-index: -1;
+    }
+
+    .ig-user-wrap { flex: 1; }
+
+    .ig-user {
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: #0b1424;
+      line-height: 1.2;
+    }
+
+    .ig-loc {
+      font-size: 0.7rem;
+      color: #7a86a0;
+    }
+
+    .ig-menu {
+      font-size: 1.2rem;
+      color: #7a86a0;
+      cursor: default;
+      letter-spacing: 0.1em;
+    }
+
+    .ig-carousel {
+      position: relative;
+      width: 100%;
+      aspect-ratio: 1 / 1;
+      background: #eef3fc;
+      overflow: hidden;
+    }
+
+    .ig-carousel-track {
+      display: flex;
+      height: 100%;
+      overflow-x: auto;
+      scroll-snap-type: x mandatory;
+      -webkit-overflow-scrolling: touch;
+      scrollbar-width: none;
+    }
+
+    .ig-carousel-track::-webkit-scrollbar { display: none; }
+
+    .ig-slide {
+      flex: 0 0 100%;
+      width: 100%;
+      height: 100%;
+      scroll-snap-align: start;
+      overflow: hidden;
+    }
+
+    .ig-slide img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    .ig-slide-counter {
+      position: absolute;
+      top: 0.7rem;
+      right: 0.7rem;
+      background: rgba(0, 0, 0, 0.6);
+      color: #ffffff;
+      font-size: 0.7rem;
+      font-weight: 700;
+      padding: 0.25rem 0.6rem;
+      border-radius: 40px;
+      letter-spacing: 0.03em;
+      z-index: 3;
+    }
+
+    .ig-nav-zone {
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      width: 30%;
+      cursor: pointer;
+      z-index: 2;
+      background: transparent;
+      border: none;
+      padding: 0;
+    }
+
+    .ig-nav-zone.left  { left: 0; }
+    .ig-nav-zone.right { right: 0; }
+
+    .ig-arrow {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 2rem;
+      height: 2rem;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.9);
+      border: none;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1rem;
+      color: #0b1424;
+      font-weight: 700;
+      cursor: pointer;
+      z-index: 3;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+      transition: opacity 0.15s;
+    }
+
+    .ig-arrow.prev { left: 0.6rem; }
+    .ig-arrow.next { right: 0.6rem; }
+
+    .ig-arrow:disabled { opacity: 0; pointer-events: none; }
+
+    .ig-dots {
+      position: absolute;
+      bottom: 0.7rem;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      gap: 0.3rem;
+      z-index: 3;
+    }
+
+    .ig-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.5);
+      transition: background 0.2s;
+    }
+
+    .ig-dot.active {
+      background: #ffffff;
+    }
+
+    .ig-heart-burst {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      pointer-events: none;
+      opacity: 0;
+      z-index: 4;
+    }
+
+    .ig-heart-burst::before {
+      content: "❤️";
+      font-size: 6rem;
+      filter: drop-shadow(0 4px 16px rgba(0, 0, 0, 0.25));
+    }
+
+    .ig-heart-burst.animate {
+      animation: heartBurst 0.9s ease forwards;
+    }
+
+    @keyframes heartBurst {
+      0%   { opacity: 0; transform: scale(0.3); }
+      25%  { opacity: 1; transform: scale(1.15); }
+      50%  { opacity: 1; transform: scale(1); }
+      100% { opacity: 0; transform: scale(1.1); }
+    }
+
+    .ig-actions {
+      display: flex;
+      align-items: center;
+      gap: 0.9rem;
+      padding: 0.7rem 1rem 0.4rem 1rem;
+      font-size: 1.3rem;
+      user-select: none;
+    }
+
+    .ig-actions .spacer { flex: 1; }
+
+    .ig-action {
+      cursor: pointer;
+      line-height: 1;
+      background: none;
+      border: none;
+      padding: 0;
+      font-size: 1.3rem;
+      transition: transform 0.15s ease;
+    }
+
+    .ig-action:active { transform: scale(0.85); }
+
+    .ig-heart {
+      position: relative;
+      display: inline-block;
+    }
+
+    .ig-heart .heart-outline,
+    .ig-heart .heart-fill {
+      display: block;
+      transition: opacity 0.15s ease, transform 0.15s ease;
+    }
+
+    .ig-heart .heart-fill {
+      position: absolute;
+      top: 0;
+      left: 0;
+      opacity: 0;
+      transform: scale(0.6);
+    }
+
+    .ig-heart.liked .heart-outline {
+      opacity: 0;
+      transform: scale(0.6);
+    }
+
+    .ig-heart.liked .heart-fill {
+      opacity: 1;
+      transform: scale(1);
+      animation: heartPop 0.35s ease;
+    }
+
+    @keyframes heartPop {
+      0%   { transform: scale(0.5); }
+      50%  { transform: scale(1.25); }
+      100% { transform: scale(1); }
+    }
+
+    .ig-body {
+      padding: 0 1rem 1rem 1rem;
+    }
+
+    .ig-likes {
+      font-size: 0.82rem;
+      font-weight: 700;
+      color: #0b1424;
+      margin-bottom: 0.3rem;
+    }
+
+    .ig-caption {
+      font-size: 0.82rem;
+      color: #2b3550;
+      line-height: 1.5;
+    }
+
+    .ig-caption .username {
+      font-weight: 700;
+      color: #0b1424;
+      margin-right: 0.3rem;
+    }
+
+    .ig-caption .hashtags {
+      color: #1a3b7a;
+    }
+
+    .ig-time {
+      font-size: 0.68rem;
+      color: #9aa5bc;
+      margin-top: 0.4rem;
+      text-transform: uppercase;
+      letter-spacing: 0.03em;
+    }
+
+    .empty-state {
+      text-align: center;
+      padding: 3rem 1rem;
+      color: #9aa5bc;
+      font-size: 0.95rem;
+      background: #ffffff;
+      border: 1px solid #e4ebf5;
+      border-radius: 1.5rem;
+      max-width: 480px;
+      margin: 0 auto;
+    }
+
+    .cta-section {
+      background: #ffffff;
+      border-radius: 2rem;
+      padding: 2.5rem 2rem;
+      text-align: center;
+      border: 1px solid #e4ebf5;
+      margin: 3rem auto 0 auto;
+      max-width: 900px;
+    }
+
+    .cta-section h2 {
+      font-family: 'Georgia', serif;
+      font-size: 1.8rem;
+      font-weight: 400;
+      color: #0b1424;
+      margin-bottom: 0.5rem;
+    }
+
+    .cta-section p {
+      font-size: 1rem;
+      color: #3d4a5a;
+      margin-bottom: 1.5rem;
+    }
+
+    .btn-primary {
+      display: inline-block;
+      background: #1a3b7a;
+      color: #ffffff;
+      font-size: 1.05rem;
+      font-weight: 600;
+      text-decoration: none;
+      padding: 0.95rem 2.6rem;
+      border-radius: 60px;
+      border: 1px solid #1a3b7a;
+      transition: all 0.2s ease;
+      box-shadow: 0 6px 18px -8px rgba(26, 59, 122, 0.4);
+    }
+
+    .btn-primary:hover {
+      background: #0b1f4a;
+      border-color: #0b1f4a;
+      transform: translateY(-2px);
+    }
+
+    .footer-note {
+      text-align: center;
+      font-size: 0.8rem;
+      color: #7a86a0;
+      padding: 2rem 0;
+    }
+
+    @media (max-width: 600px) {
+      .hero h1 { font-size: 1.8rem; }
+      .ig-arrow { width: 1.7rem; height: 1.7rem; font-size: 0.85rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <section class="hero">
+    <div class="container">
+      <h1>See Your Post Live</h1>
+      <p>Pick an organic idea. See exactly how it appears on your Instagram feed — swipe through images, just like a real post.</p>
+    </div>
+  </section>
+
+  <div class="container">
+
+    <div class="selector-wrap">
+      <label for="postSelect">Choose an organic post idea</label>
+      <select id="postSelect">
+        <option value="">— Select an idea —</option>
+        <option value="daily-special">Daily Special</option>
+        <option value="chefs-pick">Chef's Pick of the Week</option>
+        <option value="behind-scenes">Behind-the-Scenes</option>
+        <option value="customer-love">Customer Love</option>
+        <option value="fresh-ingredients">Fresh Ingredients</option>
+      </select>
+    </div>
+
+    <div id="previewContent">
+      <div class="empty-state">
+        ↑ Select an organic idea to see it live
+      </div>
+    </div>
+
+  </div>
+
+  <div class="container">
+    <div class="cta-section">
+      <h2>Get the Templates</h2>
+      <p>29 ready-to-use Canva templates. $49 one-time. Instant download.</p>
+      <a href="https://copecart.com/us/products/b2eab0b2/checkout" class="btn-primary" target="_blank" rel="noopener">Get Instant Access →</a>
+    </div>
+  </div>
+
+  <div class="footer-note">
+    © 2026 The Artistic Unity — Restaurant Templates · All rights reserved.
+  </div>
+
+  <script>
+    // ============================================================
+    //  ORGANIC POST DATA — CAROUSEL MODE
+    //  Each idea has an "images" array.
+    //  Add 1 image → single post (no dots, no arrows).
+    //  Add 2+ images → carousel with swipe.
+    // ============================================================
+
+    const posts = {
+      "daily-special": {
+        images: [
+          "img/organic-daily-1.jpg",
+          "img/organic-daily-2.jpg",
+          "img/organic-daily-3.jpg"
+        ],
+        likes: 142,
+        caption: "Today's Special: Grilled Salmon with lemon butter sauce. Available till 9 PM. Come hungry.",
+        hashtags: "#DailySpecial #FreshFood #RestaurantLove"
+      },
+      "chefs-pick": {
+        images: [
+          "img/organic-chefs-1.jpg",
+          "img/organic-chefs-2.jpg",
+          "img/organic-chefs-3.jpg"
+        ],
+        likes: 208,
+        caption: "Chef's Pick this week: Truffle Mushroom Risotto. Made with fresh local mushrooms.",
+        hashtags: "#ChefsPick #Risotto #Foodie"
+      },
+      "behind-scenes": {
+        images: [
+          "img/organic-behind-1.jpg"
+        ],
+        likes: 96,
+        caption: "Fresh ingredients arriving every morning. That's how we start our day.",
+        hashtags: "#BehindTheScenes #FreshKitchen"
+      },
+      "customer-love": {
+        images: [
+          "img/organic-review-1.jpg",
+          "img/organic-review-2.jpg"
+        ],
+        likes: 317,
+        caption: "\"Best pasta in town. We come here every Friday.\" — Sarah M.",
+        hashtags: "#CustomerLove #5StarReview"
+      },
+      "fresh-ingredients": {
+        images: [
+          "img/organic-fresh-1.jpg",
+          "img/organic-fresh-2.jpg",
+          "img/organic-fresh-3.jpg"
+        ],
+        likes: 124,
+        caption: "Hand-picked vegetables from local farms. Freshness you can taste.",
+        hashtags: "#FarmToTable #FreshIngredients"
+      }
+    };
+
+    const select = document.getElementById('postSelect');
+    const previewContent = document.getElementById('previewContent');
+
+    function renderEmpty() {
+      previewContent.innerHTML = `
+        <div class="empty-state">
+          ↑ Select an organic idea to see it live
+        </div>
+      `;
+    }
+
+    function renderPost(key) {
+      const post = posts[key];
+      if (!post) { renderEmpty(); return; }
+
+      const images = (post.images || []).filter(i => i && i.trim() !== "");
+
+      if (images.length === 0) {
+        previewContent.innerHTML = `
+          <div class="empty-state">
+            No images added for this idea yet.
+          </div>
+        `;
+        return;
+      }
+
+      const isCarousel = images.length > 1;
+
+      // Build slides
+      const slidesHTML = images.map((src, i) => `
+        <div class="ig-slide">
+          <img src="${src}" alt="Slide ${i + 1}"
+               onerror="this.parentNode.innerHTML='<div style=&quot;display:flex;align-items:center;justify-content:center;height:100%;font-size:0.75rem;color:#9aa5bc;text-align:center;padding:1rem;&quot;>Missing: ${src}</div>'">
+        </div>
+      `).join('');
+
+      // Dots — only for carousel
+      const dotsHTML = isCarousel
+        ? images.map((_, i) => `<span class="ig-dot ${i === 0 ? 'active' : ''}"></span>`).join('')
+        : '';
+
+      // Carousel-only UI (arrows, counter, nav zones)
+      const carouselUI = isCarousel ? `
+        <button class="ig-nav-zone left" id="navLeft" aria-label="Previous image"></button>
+        <button class="ig-nav-zone right" id="navRight" aria-label="Next image"></button>
+        <button class="ig-arrow prev" id="arrowPrev" aria-label="Previous">‹</button>
+        <button class="ig-arrow next" id="arrowNext" aria-label="Next">›</button>
+        <span class="ig-slide-counter" id="slideCounter">1/${images.length}</span>
+      ` : '';
+
+      previewContent.innerHTML = `
+        <div class="ig-frame">
+          <div class="ig-header">
+            <div class="ig-avatar"></div>
+            <div class="ig-user-wrap">
+              <div class="ig-user">yourrestaurant</div>
+              <div class="ig-loc">Your City, Sri Lanka</div>
+            </div>
+            <div class="ig-menu">⋯</div>
+          </div>
+
+          <div class="ig-carousel" id="igCarousel">
+            ${carouselUI}
+            <div class="ig-carousel-track" id="carouselTrack">
+              ${slidesHTML}
+            </div>
+            ${isCarousel ? `<div class="ig-dots" id="igDots">${dotsHTML}</div>` : ''}
+            <div class="ig-heart-burst" id="heartBurst"></div>
+          </div>
+
+          <div class="ig-actions">
+            <button class="ig-action ig-heart" id="heartBtn" aria-label="Like">
+              <span class="heart-outline">🤍</span>
+              <span class="heart-fill">❤️</span>
+            </button>
+            <button class="ig-action" aria-label="Comment">💬</button>
+            <button class="ig-action" aria-label="Share">↗️</button>
+            <span class="spacer"></span>
+            <button class="ig-action" aria-label="Save">🔖</button>
+          </div>
+
+          <div class="ig-body">
+            <div class="ig-likes" id="likeCount">${post.likes.toLocaleString()} likes</div>
+            <div class="ig-caption">
+              <span class="username">yourrestaurant</span>${post.caption}
+              <br>
+              <span class="hashtags">${post.hashtags}</span>
+            </div>
+            <div class="ig-time">2 hours ago</div>
+          </div>
+        </div>
+      `;
+
+      // Only wire carousel if it's a carousel
+      if (isCarousel) {
+        const track = document.getElementById('carouselTrack');
+        const dots = document.querySelectorAll('#igDots .ig-dot');
+        const counter = document.getElementById('slideCounter');
+        const arrowPrev = document.getElementById('arrowPrev');
+        const arrowNext = document.getElementById('arrowNext');
+        const navLeft = document.getElementById('navLeft');
+        const navRight = document.getElementById('navRight');
+
+        let currentIndex = 0;
+
+        function goToSlide(index) {
+          if (index < 0) index = 0;
+          if (index > images.length - 1) index = images.length - 1;
+          currentIndex = index;
+          track.scrollTo({ left: track.clientWidth * index, behavior: 'smooth' });
+          updateUI();
+        }
+
+        function updateUI() {
+          dots.forEach((d, i) => d.classList.toggle('active', i === currentIndex));
+          if (counter) counter.textContent = `${currentIndex + 1}/${images.length}`;
+          if (arrowPrev) arrowPrev.disabled = currentIndex === 0;
+          if (arrowNext) arrowNext.disabled = currentIndex === images.length - 1;
+        }
+
+        track.addEventListener('scroll', () => {
+          const idx = Math.round(track.scrollLeft / track.clientWidth);
+          if (idx !== currentIndex) {
+            currentIndex = idx;
+            updateUI();
+          }
+        });
+
+        if (arrowPrev) arrowPrev.addEventListener('click', () => goToSlide(currentIndex - 1));
+        if (arrowNext) arrowNext.addEventListener('click', () => goToSlide(currentIndex + 1));
+        if (navLeft) navLeft.addEventListener('click', () => goToSlide(currentIndex - 1));
+        if (navRight) navRight.addEventListener('click', () => goToSlide(currentIndex + 1));
+
+        document.addEventListener('keydown', function (e) {
+          if (e.key === 'ArrowLeft') goToSlide(currentIndex - 1);
+          if (e.key === 'ArrowRight') goToSlide(currentIndex + 1);
+        });
+
+        updateUI();
+      }
+
+      // Heart
+      const heartBtn = document.getElementById('heartBtn');
+      const likeCount = document.getElementById('likeCount');
+      const heartBurst = document.getElementById('heartBurst');
+      const igCarousel = document.getElementById('igCarousel');
+      let liked = false;
+
+      function toggleLike() {
+        liked = !liked;
+        heartBtn.classList.toggle('liked', liked);
+        const base = post.likes;
+        likeCount.textContent = (liked ? base + 1 : base).toLocaleString() + ' likes';
+      }
+
+      function showBurst() {
+        heartBurst.classList.remove('animate');
+        void heartBurst.offsetWidth;
+        heartBurst.classList.add('animate');
+      }
+
+      heartBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        toggleLike();
+        if (liked) showBurst();
+      });
+
+      // Double-tap image to like (works for both single + carousel)
+      let lastTap = 0;
+      igCarousel.addEventListener('click', (e) => {
+        if (e.target.closest('.ig-arrow') || e.target.closest('.ig-nav-zone')) return;
+        const now = Date.now();
+        if (now - lastTap < 300) {
+          if (!liked) {
+            toggleLike();
+            showBurst();
+          }
+          lastTap = 0;
+        } else {
+          lastTap = now;
+        }
+      });
+    }
+
+    select.addEventListener('change', function() {
+      if (!this.value) { renderEmpty(); return; }
+      renderPost(this.value);
+    });
+  </script>
+
+</body>
+</html>
