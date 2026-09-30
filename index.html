@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>See Your Post Live · Organic Preview · The Artistic Unity</title>
+  <title>See Your Ad Live · Carousel Preview · The Artistic Unity</title>
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
 
@@ -21,13 +21,13 @@
       padding: 0 1.5rem;
     }
 
+    /* HERO */
     .hero {
       background: #ffffff;
       padding: 3.5rem 2rem 2.5rem 2rem;
       text-align: center;
       border-bottom: 1px solid #e9ecef;
     }
-
     .hero h1 {
       font-family: 'Georgia', serif;
       font-size: 2.4rem;
@@ -36,7 +36,6 @@
       line-height: 1.2;
       margin-bottom: 0.8rem;
     }
-
     .hero p {
       font-size: 1.1rem;
       color: #3d4a5a;
@@ -44,10 +43,13 @@
       margin: 0 auto;
     }
 
+    /* ===== CUSTOM DROPDOWN ===== */
     .selector-wrap {
       margin: 2.5rem auto 2rem auto;
       max-width: 520px;
       text-align: center;
+      position: relative;
+      z-index: 50;
     }
 
     .selector-wrap label {
@@ -60,9 +62,18 @@
       margin-bottom: 0.6rem;
     }
 
-    select {
+    .custom-select {
+      position: relative;
       width: 100%;
-      padding: 0.95rem 1.2rem;
+    }
+
+    .custom-select-trigger {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      padding: 0.95rem 1.4rem;
       font-size: 1rem;
       font-family: inherit;
       font-weight: 500;
@@ -71,306 +82,278 @@
       border: 1.5px solid #d8e3f5;
       border-radius: 60px;
       cursor: pointer;
-      appearance: none;
-      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%231a3b7a' stroke-width='3' stroke-linecap='round'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
-      background-repeat: no-repeat;
-      background-position: right 1.3rem center;
       box-shadow: 0 4px 14px -6px rgba(26, 59, 122, 0.2);
-      transition: border-color 0.2s;
+      transition: all 0.2s ease;
+      text-align: left;
     }
 
-    select:hover { border-color: #1a3b7a; }
-    select:focus { outline: none; border-color: #1a3b7a; }
+    .custom-select-trigger:hover,
+    .custom-select.open .custom-select-trigger {
+      border-color: #1a3b7a;
+      box-shadow: 0 8px 24px -8px rgba(26, 59, 122, 0.3);
+    }
 
-    .ig-frame {
+    .custom-select-trigger .arrow {
+      flex: 0 0 auto;
+      color: #1a3b7a;
+      font-size: 0.8rem;
+      transition: transform 0.25s ease;
+    }
+
+    .custom-select.open .custom-select-trigger .arrow {
+      transform: rotate(180deg);
+    }
+
+    .custom-select-options {
+      position: absolute;
+      top: calc(100% + 0.5rem);
+      left: 0;
+      right: 0;
+      background: #ffffff;
+      border: 1px solid #e4ebf5;
+      border-radius: 1.2rem;
+      box-shadow: 0 20px 40px -12px rgba(11, 20, 36, 0.25);
+      padding: 0.5rem;
+      opacity: 0;
+      visibility: hidden;
+      transform: translateY(-8px);
+      transition: all 0.2s ease;
+      max-height: 320px;
+      overflow-y: auto;
+      z-index: 60;
+    }
+
+    .custom-select.open .custom-select-options {
+      opacity: 1;
+      visibility: visible;
+      transform: translateY(0);
+    }
+
+    .custom-option {
+      display: flex;
+      align-items: center;
+      gap: 0.7rem;
+      padding: 0.7rem 1rem;
+      border-radius: 0.8rem;
+      font-size: 0.95rem;
+      font-weight: 500;
+      color: #2b3550;
+      cursor: pointer;
+      transition: all 0.15s ease;
+      text-align: left;
+    }
+
+    .custom-option:hover {
+      background: #f4f8ff;
+      color: #1a3b7a;
+    }
+
+    .custom-option.selected {
+      background: #eef3fc;
+      color: #1a3b7a;
+      font-weight: 600;
+    }
+
+    .custom-option .check {
+      margin-left: auto;
+      color: #1a3b7a;
+      opacity: 0;
+      font-weight: 700;
+    }
+
+    .custom-option.selected .check {
+      opacity: 1;
+    }
+
+    /* FACEBOOK AD FRAME */
+    .fb-frame {
       background: #ffffff;
       border: 1px solid #e4ebf5;
       border-radius: 1rem;
-      max-width: 480px;
+      max-width: 620px;
       margin: 0 auto;
       box-shadow: 0 8px 30px -12px rgba(0, 0, 0, 0.1);
       overflow: hidden;
     }
 
-    .ig-header {
+    .fb-header {
       display: flex;
       align-items: center;
       gap: 0.7rem;
-      padding: 0.8rem 1rem;
+      padding: 0.9rem 1rem;
     }
-
-    .ig-avatar {
-      width: 2.2rem;
-      height: 2.2rem;
+    .fb-avatar {
+      width: 2.5rem;
+      height: 2.5rem;
       border-radius: 50%;
       background: linear-gradient(135deg, #3b6bcf, #1a3b7a);
       flex: 0 0 auto;
-      position: relative;
     }
-
-    .ig-avatar::after {
-      content: "";
-      position: absolute;
-      inset: -2px;
-      border-radius: 50%;
-      border: 2px solid #e1306c;
-      z-index: -1;
-    }
-
-    .ig-user-wrap { flex: 1; }
-
-    .ig-user {
-      font-size: 0.85rem;
+    .fb-user {
+      font-size: 0.9rem;
       font-weight: 700;
       color: #0b1424;
       line-height: 1.2;
     }
-
-    .ig-loc {
-      font-size: 0.7rem;
+    .fb-meta {
+      font-size: 0.72rem;
       color: #7a86a0;
+      display: flex;
+      align-items: center;
+      gap: 0.3rem;
     }
 
-    .ig-menu {
-      font-size: 1.2rem;
-      color: #7a86a0;
-      cursor: default;
-      letter-spacing: 0.1em;
+    .fb-caption {
+      padding: 0 1rem 0.8rem 1rem;
+      font-size: 0.85rem;
+      color: #2b3550;
+      line-height: 1.5;
     }
 
-    .ig-carousel {
+    /* ===== CAROUSEL AREA ===== */
+    .carousel-wrap {
       position: relative;
-      width: 100%;
-      aspect-ratio: 1 / 1;
-      background: #eef3fc;
+      border-top: 1px solid #f0f0f0;
+      border-bottom: 1px solid #f0f0f0;
       overflow: hidden;
     }
-
-    .ig-carousel-track {
+    .carousel {
       display: flex;
-      height: 100%;
+      gap: 0.4rem;
       overflow-x: auto;
+      padding: 0.8rem;
       scroll-snap-type: x mandatory;
       -webkit-overflow-scrolling: touch;
       scrollbar-width: none;
+      scroll-padding-left: 0.8rem;
+      scroll-padding-right: 0.8rem;
     }
+    .carousel::-webkit-scrollbar { display: none; }
 
-    .ig-carousel-track::-webkit-scrollbar { display: none; }
-
-    .ig-slide {
-      flex: 0 0 100%;
-      width: 100%;
-      height: 100%;
+    .card {
+      flex: 0 0 auto;
+      width: 85%;
+      max-width: 340px;
+      background: #ffffff;
+      border: 1px solid #e4ebf5;
+      border-radius: 0.5rem;
+      overflow: hidden;
       scroll-snap-align: start;
+      display: flex;
+      flex-direction: column;
+    }
+    .card-img {
+      width: 100%;
+      aspect-ratio: 1 / 1;
+      background: #eef3fc;
+      display: flex;
+      align-items: center;
+      justify-content: center;
       overflow: hidden;
     }
-
-    .ig-slide img {
+    .card-img img {
       width: 100%;
       height: 100%;
       object-fit: cover;
       display: block;
     }
-
-    .ig-slide-counter {
-      position: absolute;
-      top: 0.7rem;
-      right: 0.7rem;
-      background: rgba(0, 0, 0, 0.6);
-      color: #ffffff;
-      font-size: 0.7rem;
+    .card-body {
+      padding: 0.8rem 0.9rem 0.9rem 0.9rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.3rem;
+      flex: 1;
+      background: #f7f9fc;
+    }
+    .card-domain {
+      font-size: 0.65rem;
+      color: #7a86a0;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      font-weight: 600;
+    }
+    .card-headline {
+      font-size: 0.88rem;
       font-weight: 700;
-      padding: 0.25rem 0.6rem;
-      border-radius: 40px;
-      letter-spacing: 0.03em;
-      z-index: 3;
+      color: #0b1424;
+      line-height: 1.3;
     }
-
-    .ig-nav-zone {
-      position: absolute;
-      top: 0;
-      bottom: 0;
-      width: 30%;
+    .card-desc {
+      font-size: 0.72rem;
+      color: #7a86a0;
+      line-height: 1.35;
+    }
+    .card-cta {
+      align-self: flex-start;
+      font-size: 0.72rem;
+      font-weight: 700;
+      color: #ffffff;
+      background: #1a3b7a;
+      border: 1px solid #1a3b7a;
+      padding: 0.4rem 0.9rem;
+      border-radius: 6px;
+      text-decoration: none;
       cursor: pointer;
-      z-index: 2;
-      background: transparent;
-      border: none;
-      padding: 0;
+      transition: background 0.15s;
+      margin-top: 0.6rem;
     }
+    .card-cta:hover { background: #0b1f4a; }
 
-    .ig-nav-zone.left  { left: 0; }
-    .ig-nav-zone.right { right: 0; }
-
-    .ig-arrow {
-      position: absolute;
-      top: 50%;
-      transform: translateY(-50%);
-      width: 2rem;
-      height: 2rem;
-      border-radius: 50%;
-      background: rgba(255, 255, 255, 0.9);
-      border: none;
+    /* Carousel nav */
+    .carousel-nav {
       display: flex;
       align-items: center;
-      justify-content: center;
-      font-size: 1rem;
-      color: #0b1424;
-      font-weight: 700;
-      cursor: pointer;
-      z-index: 3;
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
-      transition: opacity 0.15s;
+      justify-content: space-between;
+      padding: 0.6rem 1rem;
+      border-top: 1px solid #f0f0f0;
     }
-
-    .ig-arrow.prev { left: 0.6rem; }
-    .ig-arrow.next { right: 0.6rem; }
-
-    .ig-arrow:disabled { opacity: 0; pointer-events: none; }
-
-    .ig-dots {
-      position: absolute;
-      bottom: 0.7rem;
-      left: 50%;
-      transform: translateX(-50%);
-      display: flex;
-      gap: 0.3rem;
-      z-index: 3;
-    }
-
-    .ig-dot {
+    .carousel-dots { display: flex; gap: 0.3rem; }
+    .dot {
       width: 6px;
       height: 6px;
       border-radius: 50%;
-      background: rgba(255, 255, 255, 0.5);
+      background: #d8e3f5;
       transition: background 0.2s;
     }
+    .dot.active { background: #1a3b7a; }
 
-    .ig-dot.active {
+    .nav-arrows { display: flex; gap: 0.4rem; }
+    .nav-arrow {
+      width: 1.8rem;
+      height: 1.8rem;
+      border-radius: 50%;
       background: #ffffff;
-    }
-
-    .ig-heart-burst {
-      position: absolute;
-      inset: 0;
+      border: 1px solid #d8e3f5;
+      color: #1a3b7a;
+      font-size: 0.85rem;
+      font-weight: 700;
+      cursor: pointer;
       display: flex;
       align-items: center;
       justify-content: center;
-      pointer-events: none;
-      opacity: 0;
-      z-index: 4;
+      transition: background 0.15s;
     }
+    .nav-arrow:hover { background: #eef3fc; }
+    .nav-arrow:disabled { opacity: 0.35; cursor: default; }
 
-    .ig-heart-burst::before {
-      content: "❤️";
-      font-size: 6rem;
-      filter: drop-shadow(0 4px 16px rgba(0, 0, 0, 0.25));
-    }
-
-    .ig-heart-burst.animate {
-      animation: heartBurst 0.9s ease forwards;
-    }
-
-    @keyframes heartBurst {
-      0%   { opacity: 0; transform: scale(0.3); }
-      25%  { opacity: 1; transform: scale(1.15); }
-      50%  { opacity: 1; transform: scale(1); }
-      100% { opacity: 0; transform: scale(1.1); }
-    }
-
-    .ig-actions {
+    .fb-footer {
       display: flex;
       align-items: center;
-      gap: 0.9rem;
-      padding: 0.7rem 1rem 0.4rem 1rem;
-      font-size: 1.3rem;
-      user-select: none;
+      justify-content: space-around;
+      padding: 0.7rem 1rem;
+      border-top: 1px solid #f0f0f0;
+      font-size: 0.78rem;
+      font-weight: 600;
+      color: #55617d;
     }
-
-    .ig-actions .spacer { flex: 1; }
-
-    .ig-action {
+    .fb-footer span {
+      display: flex;
+      align-items: center;
+      gap: 0.3rem;
       cursor: pointer;
-      line-height: 1;
-      background: none;
-      border: none;
-      padding: 0;
-      font-size: 1.3rem;
-      transition: transform 0.15s ease;
     }
 
-    .ig-action:active { transform: scale(0.85); }
-
-    .ig-heart {
-      position: relative;
-      display: inline-block;
-    }
-
-    .ig-heart .heart-outline,
-    .ig-heart .heart-fill {
-      display: block;
-      transition: opacity 0.15s ease, transform 0.15s ease;
-    }
-
-    .ig-heart .heart-fill {
-      position: absolute;
-      top: 0;
-      left: 0;
-      opacity: 0;
-      transform: scale(0.6);
-    }
-
-    .ig-heart.liked .heart-outline {
-      opacity: 0;
-      transform: scale(0.6);
-    }
-
-    .ig-heart.liked .heart-fill {
-      opacity: 1;
-      transform: scale(1);
-      animation: heartPop 0.35s ease;
-    }
-
-    @keyframes heartPop {
-      0%   { transform: scale(0.5); }
-      50%  { transform: scale(1.25); }
-      100% { transform: scale(1); }
-    }
-
-    .ig-body {
-      padding: 0 1rem 1rem 1rem;
-    }
-
-    .ig-likes {
-      font-size: 0.82rem;
-      font-weight: 700;
-      color: #0b1424;
-      margin-bottom: 0.3rem;
-    }
-
-    .ig-caption {
-      font-size: 0.82rem;
-      color: #2b3550;
-      line-height: 1.5;
-    }
-
-    .ig-caption .username {
-      font-weight: 700;
-      color: #0b1424;
-      margin-right: 0.3rem;
-    }
-
-    .ig-caption .hashtags {
-      color: #1a3b7a;
-    }
-
-    .ig-time {
-      font-size: 0.68rem;
-      color: #9aa5bc;
-      margin-top: 0.4rem;
-      text-transform: uppercase;
-      letter-spacing: 0.03em;
-    }
-
+    /* Empty state */
     .empty-state {
       text-align: center;
       padding: 3rem 1rem;
@@ -379,10 +362,11 @@
       background: #ffffff;
       border: 1px solid #e4ebf5;
       border-radius: 1.5rem;
-      max-width: 480px;
+      max-width: 620px;
       margin: 0 auto;
     }
 
+    /* CTA */
     .cta-section {
       background: #ffffff;
       border-radius: 2rem;
@@ -392,7 +376,6 @@
       margin: 3rem auto 0 auto;
       max-width: 900px;
     }
-
     .cta-section h2 {
       font-family: 'Georgia', serif;
       font-size: 1.8rem;
@@ -400,13 +383,11 @@
       color: #0b1424;
       margin-bottom: 0.5rem;
     }
-
     .cta-section p {
       font-size: 1rem;
       color: #3d4a5a;
       margin-bottom: 1.5rem;
     }
-
     .btn-primary {
       display: inline-block;
       background: #1a3b7a;
@@ -420,7 +401,6 @@
       transition: all 0.2s ease;
       box-shadow: 0 6px 18px -8px rgba(26, 59, 122, 0.4);
     }
-
     .btn-primary:hover {
       background: #0b1f4a;
       border-color: #0b1f4a;
@@ -436,7 +416,7 @@
 
     @media (max-width: 600px) {
       .hero h1 { font-size: 1.8rem; }
-      .ig-arrow { width: 1.7rem; height: 1.7rem; font-size: 0.85rem; }
+      .card { width: 88%; }
     }
   </style>
 </head>
@@ -444,30 +424,33 @@
 
   <section class="hero">
     <div class="container">
-      <h1>See Your Post Live</h1>
-      <p>Pick an organic idea. See exactly how it appears on your Instagram feed — swipe through images, just like a real post.</p>
+      <h1>See Your Ad Live</h1>
+      <p>Pick a Meta ad objective. See exactly how it appears on Facebook and Instagram carousel — before you post.</p>
     </div>
   </section>
 
   <div class="container">
-
     <div class="selector-wrap">
-      <label for="postSelect">Choose an organic post idea</label>
-      <select id="postSelect">
-        <option value="">— Select an idea —</option>
-        <option value="Welcome Everyone">Welcome Everyone</option>
-        <option value="chefs-pick">Chef's Pick of the Week</option>
-        <option value="customer-love">Customer Love</option>
-        <option value="fresh-ingredients">Fresh Ingredients</option>
-      </select>
-    </div>
-
-    <div id="previewContent">
-      <div class="empty-state">
-        ↑ Select an organic idea to see it live
+      <label>Choose an ad objective</label>
+      <div class="custom-select" id="customSelect">
+        <button type="button" class="custom-select-trigger" id="customTrigger">
+          <span id="customLabel">— Select an ad objective —</span>
+          <span class="arrow">▼</span>
+        </button>
+        <div class="custom-select-options" id="customOptions">
+          <div class="custom-option" data-value="awareness">Awareness <span class="check">✓</span></div>
+          <div class="custom-option" data-value="traffic">Traffic <span class="check">✓</span></div>
+          <div class="custom-option" data-value="engagement">Engagement <span class="check">✓</span></div>
+          <div class="custom-option" data-value="leads">Leads <span class="check">✓</span></div>
+          <div class="custom-option" data-value="app-promotion">App Promotion <span class="check">✓</span></div>
+          <div class="custom-option" data-value="sales">Sales <span class="check">✓</span></div>
+        </div>
       </div>
     </div>
 
+    <div id="previewContent">
+      <div class="empty-state">↑ Select an ad objective to see it live</div>
+    </div>
   </div>
 
   <div class="container">
@@ -483,238 +466,189 @@
   </div>
 
   <script>
-    // ============================================================
-    //  ORGANIC POST DATA — CAROUSEL MODE
-    //  Keys MUST match the <option value="..."> in the dropdown.
-    //  Add 1 image → single post (no dots, no arrows).
-    //  Add 2+ images → carousel with swipe.
-    // ============================================================
-
-    const posts = {
-      "Welcome Everyone": {
-        images: [
-          "https://i.postimg.cc/GtHQgp9k/Copy-of-The-Artistic-Unity.png",
-          "https://i.postimg.cc/FRPpxSFH/1-(6).png",
-          "https://i.postimg.cc/wM7V4B35/2-(10).png",
-          "https://i.postimg.cc/bvhmY8Vg/4-(9).png"
-        ],
-        likes: 142,
-        caption: "Available till 9 PM. Come hungry.",
-        hashtags: "#DailySpecial #FreshFood #RestaurantLove"
+    const ads = {
+      "awareness": {
+        caption: "Fresh ingredients, made with love every single day. Come see what we're about. 🍝",
+        cards: [
+          { image: "https://i.postimg.cc/GtHQgp9k/Copy-of-The-Artistic-Unity.png", headline: "Welcome", desc: "Fresh, every day", cta: "Learn More" },
+          { image: "https://i.postimg.cc/FRPpxSFH/1-(6).png", headline: "Who Are We?", desc: "Where it all happens", cta: "Learn More" },
+          { image: "https://i.postimg.cc/QtNS5m3m/5-(4).png", headline: "Fresh Ingredients", desc: "Where it all happens", cta: "Learn More" },
+          { image: "https://i.postimg.cc/Hk5SCjzy/9-(3).png", headline: "Authenticity", desc: "Why we cook", cta: "Learn More" }
+        ]
       },
-      "chefs-pick": {
-        images: [
-          "https://i.postimg.cc/HsFSKbwd/10-(4).png",
-          "https://i.postimg.cc/4xt8TnPw/8-(4).png",
-          "https://i.postimg.cc/ZY7s8G0C/12-(2).png"
-        ],
-        likes: 208,
-        caption: "Chef's Picks This Week: Grilled Pork-Enhanced Dumplings as a starter, and Pork-Infused Ramen or Ratatouille for the main course. Dessert is Melting Chocolate-Glazed Cheesecake.",
-        hashtags: "#ChefsPick #Risotto #Foodie"
+      "traffic": {
+        caption: "Our full menu is live on our website — tap to see everything we serve.",
+        cards: [
+          { image: "https://i.postimg.cc/GtHQgp9k/Copy-of-The-Artistic-Unity.png", headline: "Welcome", desc: "Every dish, every price", cta: "Visit Website" },
+          { image: "https://i.postimg.cc/MTs5YBZx/7-(3).png", headline: "Multiple Options", desc: "Delivery or pickup", cta: "Visit Website" },
+          { image: "https://i.postimg.cc/8zWyVs4B/11-(2).png", headline: "Desserts!", desc: "Delivery or pickup", cta: "Visit Website" },
+          { image: "https://i.postimg.cc/LXyDVP9G/6-(6).png", headline: "Visit Our Website", desc: "Location + hours", cta: "Visit Website" }
+        ]
       },
-      "customer-love": {
-        images: [
-          "https://i.postimg.cc/QtNS5m3m/5-(4).png",
-          "https://i.postimg.cc/Hk5SCjzy/9-(3).png",
-          "https://i.postimg.cc/8zWyVs4B/11-(2).png"
-        ],
-        likes: 317,
-        caption: "\"Fresh salad as a starter, then an authentic Chinese breakfast. We come here every Friday.\" — Sarah M.",
-        hashtags: "#CustomerLove #5StarReview"
+      "engagement": {
+        caption: "Which one are you ordering first? Tell us below. 👇",
+        cards: [
+          { image: "https://i.postimg.cc/GtHQgp9k/Copy-of-The-Artistic-Unity.png", headline: "Welcome", desc: "Fresh, every day", cta: "View Now" },
+          { image: "https://i.postimg.cc/FRPpxSFH/1-(6).png", headline: "Who Are We?", desc: "Comment your favorite", cta: "View Now" },
+          { image: "https://i.postimg.cc/QtNS5m3m/5-(4).png", headline: "Fresh ingredients", desc: "Who would love this?", cta: "View Now" },
+          { image: "https://i.postimg.cc/LXyDVP9G/6-(6).png", headline: "We Are Unique", desc: "Who would love this?", cta: "View Now" }
+        ]
       },
-      "fresh-ingredients": {
-        images: [
-          "https://i.postimg.cc/MTs5YBZx/7-(3).png",
-          "https://i.postimg.cc/4xt8TnPw/8-(4).png",
-          "https://i.postimg.cc/QtNS5m3m/5-(4).png"
-        ],
-        likes: 124,
-        caption: "A wide range of food choices that represent every culture, fused with our chef's kiss. Freshness you can taste.",
-        hashtags: "#FarmToTable #FreshIngredients"
+      "leads": {
+        caption: "Want our full menu? We'll send it straight to your WhatsApp. 📩",
+        cards: [
+          { image: "https://i.postimg.cc/GtHQgp9k/Copy-of-The-Artistic-Unity.png", headline: "Welcome", desc: "Sent instantly", cta: "Send WhatsApp" },
+          { image: "https://i.postimg.cc/FRPpxSFH/1-(6).png", headline: "Who Are We?", desc: "Sent instantly", cta: "Send WhatsApp" },
+          { image: "https://i.postimg.cc/T1FczXWn/3-(8).png", headline: "30% Off", desc: "Offers before anyone else", cta: "Send WhatsApp" },
+          { image: "https://i.postimg.cc/bvhmY8Vg/4-(9).png", headline: "Book A Table", desc: "We'll confirm by message", cta: "Send WhatsApp" }
+        ]
+      },
+      "app-promotion": {
+        caption: "Order faster with our app — download now and get your first dessert free.",
+        cards: [
+          { image: "https://i.postimg.cc/GtHQgp9k/Copy-of-The-Artistic-Unity.png", headline: "Welcome", desc: "Order in seconds", cta: "Install Now" },
+          { image: "https://i.postimg.cc/FRPpxSFH/1-(6).png", headline: "Who Are We?", desc: "All signature dishes", cta: "Install Now" },
+          { image: "https://i.postimg.cc/4xt8TnPw/8-(4).png", headline: "Multiple Options", desc: "First app order", cta: "Install Now" },
+          { image: "https://i.postimg.cc/8zWyVs4B/11-(2).png", headline: "Desserts!", desc: "First app order", cta: "Install Now" },
+          { image: "https://i.postimg.cc/Hk5SCjzy/9-(3).png", headline: "One Click Away", desc: "Order Online", cta: "Install Now" }
+        ]
+      },
+      "sales": {
+        caption: "This weekend only — 20% off our signature dishes. Book your table now.",
+        cards: [
+          { image: "https://i.postimg.cc/GtHQgp9k/Copy-of-The-Artistic-Unity.png", headline: "Welcome", desc: "All signature dishes", cta: "Order Now" },
+          { image: "https://i.postimg.cc/FRPpxSFH/1-(6).png", headline: "Who Are We?", desc: "All signature dishes", cta: "Order Now" },
+          { image: "https://i.postimg.cc/MTs5YBZx/7-(3).png", headline: "Multiple Options", desc: "Limited tables available", cta: "Order Now" },
+          { image: "https://i.postimg.cc/ZY7s8G0C/12-(2).png", headline: "Desserts!", desc: "2-for-1 on mains", cta: "Order Now" },
+          { image: "https://i.postimg.cc/T1FczXWn/3-(8).png", headline: "30% OFF", desc: "2-for-1 on mains", cta: "Order Now" }
+        ]
       }
     };
 
-    const select = document.getElementById('postSelect');
     const previewContent = document.getElementById('previewContent');
 
     function renderEmpty() {
-      previewContent.innerHTML = `
-        <div class="empty-state">
-          ↑ Select an organic idea to see it live
-        </div>
-      `;
+      previewContent.innerHTML = `<div class="empty-state">↑ Select an ad objective to see it live</div>`;
     }
 
-    function renderPost(key) {
-      const post = posts[key];
-      if (!post) { renderEmpty(); return; }
+    function renderAd(key) {
+      const ad = ads[key];
+      if (!ad) { renderEmpty(); return; }
 
-      const images = (post.images || []).filter(i => i && i.trim() !== "");
-
-      if (images.length === 0) {
-        previewContent.innerHTML = `
-          <div class="empty-state">
-            No images added for this idea yet.
-          </div>
-        `;
+      const visibleCards = ad.cards.filter(c => c.image && c.image.trim() !== "");
+      if (visibleCards.length === 0) {
+        previewContent.innerHTML = `<div class="empty-state">No images added for this objective yet.</div>`;
         return;
       }
 
-      const isCarousel = images.length > 1;
-
-      const slidesHTML = images.map((src, i) => `
-        <div class="ig-slide">
-          <img src="${src}" alt="Slide ${i + 1}"
-               onerror="this.parentNode.innerHTML='<div style=&quot;display:flex;align-items:center;justify-content:center;height:100%;font-size:0.75rem;color:#9aa5bc;text-align:center;padding:1rem;&quot;>Missing: ${src}</div>'">
+      const cardsHTML = visibleCards.map(card => `
+        <div class="card">
+          <div class="card-img">
+            <img src="${card.image}" alt="${card.headline}"
+                 onerror="this.parentNode.innerHTML='<div style=&quot;font-size:0.7rem;color:#9aa5bc;text-align:center;padding:0.5rem;&quot;>Missing: ${card.image}</div>'">
+          </div>
+          <div class="card-body">
+            <div class="card-domain">yourrestaurant.com</div>
+            <div class="card-headline">${card.headline}</div>
+            <div class="card-desc">${card.desc}</div>
+            <span class="card-cta">${card.cta}</span>
+          </div>
         </div>
       `).join('');
 
-      const dotsHTML = isCarousel
-        ? images.map((_, i) => `<span class="ig-dot ${i === 0 ? 'active' : ''}"></span>`).join('')
-        : '';
-
-      const carouselUI = isCarousel ? `
-        <button class="ig-nav-zone left" id="navLeft" aria-label="Previous image"></button>
-        <button class="ig-nav-zone right" id="navRight" aria-label="Next image"></button>
-        <button class="ig-arrow prev" id="arrowPrev" aria-label="Previous">‹</button>
-        <button class="ig-arrow next" id="arrowNext" aria-label="Next">›</button>
-        <span class="ig-slide-counter" id="slideCounter">1/${images.length}</span>
-      ` : '';
+      const dotsHTML = visibleCards.map((_, i) =>
+        `<span class="dot ${i === 0 ? 'active' : ''}"></span>`
+      ).join('');
 
       previewContent.innerHTML = `
-        <div class="ig-frame">
-          <div class="ig-header">
-            <div class="ig-avatar"></div>
-            <div class="ig-user-wrap">
-              <div class="ig-user">yourrestaurant</div>
-              <div class="ig-loc">Your City, Sri Lanka</div>
+        <div class="fb-frame">
+          <div class="fb-header">
+            <div class="fb-avatar"></div>
+            <div>
+              <div class="fb-user">Your Restaurant</div>
+              <div class="fb-meta">Sponsored · 🌐</div>
             </div>
-            <div class="ig-menu">⋯</div>
           </div>
-
-          <div class="ig-carousel" id="igCarousel">
-            ${carouselUI}
-            <div class="ig-carousel-track" id="carouselTrack">
-              ${slidesHTML}
+          <div class="fb-caption">${ad.caption}</div>
+          <div class="carousel-wrap">
+            <div class="carousel" id="carousel">${cardsHTML}</div>
+          </div>
+          <div class="carousel-nav">
+            <div class="carousel-dots" id="dots">${dotsHTML}</div>
+            <div class="nav-arrows">
+              <button class="nav-arrow" id="prevBtn">‹</button>
+              <button class="nav-arrow" id="nextBtn">›</button>
             </div>
-            ${isCarousel ? `<div class="ig-dots" id="igDots">${dotsHTML}</div>` : ''}
-            <div class="ig-heart-burst" id="heartBurst"></div>
           </div>
-
-          <div class="ig-actions">
-            <button class="ig-action ig-heart" id="heartBtn" aria-label="Like">
-              <span class="heart-outline">🤍</span>
-              <span class="heart-fill">❤️</span>
-            </button>
-            <button class="ig-action" aria-label="Comment">💬</button>
-            <button class="ig-action" aria-label="Share">↗️</button>
-            <span class="spacer"></span>
-            <button class="ig-action" aria-label="Save">🔖</button>
-          </div>
-
-          <div class="ig-body">
-            <div class="ig-likes" id="likeCount">${post.likes.toLocaleString()} likes</div>
-            <div class="ig-caption">
-              <span class="username">yourrestaurant</span>${post.caption}
-              <br>
-              <span class="hashtags">${post.hashtags}</span>
-            </div>
-            <div class="ig-time">2 hours ago</div>
+          <div class="fb-footer">
+            <span>👍 Like</span>
+            <span>💬 Comment</span>
+            <span>↗ Share</span>
           </div>
         </div>
       `;
 
-      if (isCarousel) {
-        const track = document.getElementById('carouselTrack');
-        const dots = document.querySelectorAll('#igDots .ig-dot');
-        const counter = document.getElementById('slideCounter');
-        const arrowPrev = document.getElementById('arrowPrev');
-        const arrowNext = document.getElementById('arrowNext');
-        const navLeft = document.getElementById('navLeft');
-        const navRight = document.getElementById('navRight');
+      const carousel = document.getElementById('carousel');
+      const dots = document.querySelectorAll('#dots .dot');
+      const prevBtn = document.getElementById('prevBtn');
+      const nextBtn = document.getElementById('nextBtn');
 
-        let currentIndex = 0;
-
-        function goToSlide(index) {
-          if (index < 0) index = 0;
-          if (index > images.length - 1) index = images.length - 1;
-          currentIndex = index;
-          track.scrollTo({ left: track.clientWidth * index, behavior: 'smooth' });
-          updateUI();
-        }
-
-        function updateUI() {
-          dots.forEach((d, i) => d.classList.toggle('active', i === currentIndex));
-          if (counter) counter.textContent = `${currentIndex + 1}/${images.length}`;
-          if (arrowPrev) arrowPrev.disabled = currentIndex === 0;
-          if (arrowNext) arrowNext.disabled = currentIndex === images.length - 1;
-        }
-
-        track.addEventListener('scroll', () => {
-          const idx = Math.round(track.scrollLeft / track.clientWidth);
-          if (idx !== currentIndex) {
-            currentIndex = idx;
-            updateUI();
-          }
-        });
-
-        if (arrowPrev) arrowPrev.addEventListener('click', () => goToSlide(currentIndex - 1));
-        if (arrowNext) arrowNext.addEventListener('click', () => goToSlide(currentIndex + 1));
-        if (navLeft) navLeft.addEventListener('click', () => goToSlide(currentIndex - 1));
-        if (navRight) navRight.addEventListener('click', () => goToSlide(currentIndex + 1));
-
-        document.addEventListener('keydown', function (e) {
-          if (e.key === 'ArrowLeft') goToSlide(currentIndex - 1);
-          if (e.key === 'ArrowRight') goToSlide(currentIndex + 1);
-        });
-
-        updateUI();
+      function stepWidth() {
+        const card = carousel.querySelector('.card');
+        const gap = 6.4;
+        return card.offsetWidth + gap;
+      }
+      function updateDots() {
+        const idx = Math.round(carousel.scrollLeft / stepWidth());
+        dots.forEach((d, i) => d.classList.toggle('active', i === idx));
+      }
+      function updateArrows() {
+        prevBtn.disabled = carousel.scrollLeft <= 2;
+        nextBtn.disabled = carousel.scrollLeft >= carousel.scrollWidth - carousel.clientWidth - 2;
       }
 
-      const heartBtn = document.getElementById('heartBtn');
-      const likeCount = document.getElementById('likeCount');
-      const heartBurst = document.getElementById('heartBurst');
-      const igCarousel = document.getElementById('igCarousel');
-      let liked = false;
-
-      function toggleLike() {
-        liked = !liked;
-        heartBtn.classList.toggle('liked', liked);
-        const base = post.likes;
-        likeCount.textContent = (liked ? base + 1 : base).toLocaleString() + ' likes';
-      }
-
-      function showBurst() {
-        heartBurst.classList.remove('animate');
-        void heartBurst.offsetWidth;
-        heartBurst.classList.add('animate');
-      }
-
-      heartBtn.addEventListener('click', (e) => {
-        e.stopPropagation();
-        toggleLike();
-        if (liked) showBurst();
-      });
-
-      let lastTap = 0;
-      igCarousel.addEventListener('click', (e) => {
-        if (e.target.closest('.ig-arrow') || e.target.closest('.ig-nav-zone')) return;
-        const now = Date.now();
-        if (now - lastTap < 300) {
-          if (!liked) {
-            toggleLike();
-            showBurst();
-          }
-          lastTap = 0;
-        } else {
-          lastTap = now;
-        }
-      });
+      prevBtn.addEventListener('click', () => carousel.scrollBy({ left: -stepWidth(), behavior: 'smooth' }));
+      nextBtn.addEventListener('click', () => carousel.scrollBy({ left: stepWidth(), behavior: 'smooth' }));
+      carousel.addEventListener('scroll', () => { updateDots(); updateArrows(); });
+      updateArrows();
     }
 
-    select.addEventListener('change', function() {
-      if (!this.value) { renderEmpty(); return; }
-      renderPost(this.value);
+    // ===== CUSTOM DROPDOWN LOGIC =====
+    const customSelect = document.getElementById('customSelect');
+    const customTrigger = document.getElementById('customTrigger');
+    const customLabel = document.getElementById('customLabel');
+    const customOptions = document.querySelectorAll('.custom-option');
+
+    customTrigger.addEventListener('click', function(e) {
+      e.stopPropagation();
+      customSelect.classList.toggle('open');
+    });
+
+    customOptions.forEach(function(opt) {
+      opt.addEventListener('click', function() {
+        const value = this.getAttribute('data-value');
+        const text = this.textContent.replace('✓', '').trim();
+
+        customLabel.textContent = text;
+        customSelect.classList.remove('open');
+
+        customOptions.forEach(o => o.classList.remove('selected'));
+        this.classList.add('selected');
+
+        renderAd(value);
+      });
+    });
+
+    document.addEventListener('click', function(e) {
+      if (!customSelect.contains(e.target)) {
+        customSelect.classList.remove('open');
+      }
+    });
+
+    document.addEventListener('keydown', function(e) {
+      if (e.key === 'Escape') {
+        customSelect.classList.remove('open');
+      }
     });
   </script>
 
